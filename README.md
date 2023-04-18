@@ -33,5 +33,3 @@ Merci à [shields.io](https://shields.io) pour la création des badges.
 Un grand merci à [GitHub](https://github.com) pour l'hébergement du projet.
 
 ---
-
-[![Discord Dieupix](https://img.shields.io/badge/Discord-Dieupix%230340-purple?style=for-the-badge&logo=discord)](https://discord.com)
