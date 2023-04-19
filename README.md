@@ -20,7 +20,7 @@ L'équipe du MOE :
 |:---|:---|
 | HENNEQUIN Maxime	| Responsable projet & développeur	|
 | CHARRIER Mathis 	| Développeur 						|
-| FONTAINE Antoine | Développeur						|
+| FONTAINE Antoine  | Développeur						|
 | 	| Développeur						|
 
 Merci à [Discord](https://discord.com) pour la communication au sein du groupe.\
