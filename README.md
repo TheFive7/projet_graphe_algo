@@ -18,7 +18,7 @@ Professeur(s) encadrant(s) :\
 L'équipe du MOE :
 | Membre			| Rôle 								|
 |:---|:---|
-| 	| Responsable projet & développeur	|
+| HENNEQUIN Maxime	| Responsable projet & développeur	|
 | CHARRIER Mathis 	| Développeur 						|
 | | Développeur						|
 | 	| Développeur						|
