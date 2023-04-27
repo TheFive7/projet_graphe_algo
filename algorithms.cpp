@@ -1,5 +1,7 @@
 #include "algorithms.h"
 
+#include <QDebug>
+
 bool Dantzig(vector<vector<int>>& c)
 {
     //Initialisation
@@ -189,6 +191,9 @@ void englobe_ordonnancement(const vector<int>& fs, const vector<int>& aps, const
 void fortconnexe(const vector<int>& FS, const vector<int>& APS, vector<int>& cfc, vector<int>& pilch, vector<int>& pred, vector<int>& prem)
 {
     int n = APS[0], p = 0;
+
+   // qDebug() << "APS 0 : " << APS[0];
+  //  qDebug() << "FS 0 : " << FS[0];
 
     cfc.clear();
     cfc.resize(n + 1);

@@ -1,9 +1,21 @@
-#include <iostream>
-#include "application.h"
-using namespace std;
+#include "mainwindow.h"
+#include <QApplication>
 
-int main()
+#include "test.h"
+#include "algorithms.h"
+#include "widgetgraph.h"
+
+int main(int argc, char *argv[])
 {
-    application app;
-    app.menuPrincipal();
+    QApplication a(argc, argv);
+    MainWindow w{};
+    w.show();
+
+
+    int exe = a.exec();
+
+    test(); // Pour lancer les tests
+
+    return exe;
 }
+
