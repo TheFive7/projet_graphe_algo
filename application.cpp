@@ -14,9 +14,8 @@ void application::menuPrincipal()
     cout<<"Que souhaitez-vous faire ?\n"<<endl;
     int choix = 0;
     cout<<"0. Quitter\n";
-    cout<<"1. Charger un graphe\n";
-    cout<<"2. Lancer un algorithme\n";
-    cout<<">";
+    cout<<"1. Charger un graphe.\n";
+    cout<<"2. lancer un algorithme\n";
     cin>>choix;
     while(choix < 0 || choix > 2)
     {
@@ -24,7 +23,6 @@ void application::menuPrincipal()
         cout<<"0. Quitter";
         cout<<"1. Charger un graphe.\n";
         cout<<"2. lancer un algorithme\n";
-        cout<<">";
         cin>>choix;
     }
     switch(choix)
@@ -164,7 +162,7 @@ void application::matrice()
     do{
         std::cout<<"S'agit-il d'un graphe oriente ? (1 = oui/0 = non)";
         std::cin>>choixOriente;
-    } while(choixOriente != 1 && choixOriente != 0);
+    }while(choixOriente != 1 && choixOriente != 0);
 
     int tailleMatrice;
     std::cout<<"Nombre de noeud : ";
@@ -184,7 +182,7 @@ void application::matrice()
         Matrice[0][i] = 0;
     }
 
-    for(int i = 1; i <= tailleMatrice; i++)
+    for(int i = 1; i < tailleMatrice; i++)
     {
         Matrice[i].resize(tailleMatrice+1);
     }
@@ -192,7 +190,7 @@ void application::matrice()
     {
         for(int j = 1; j <= tailleMatrice; j++)
         {
-            std::cout<<"Case n ["<<i<<"]["<<j<<"]";
+            std::cout<<"Case n°["<<i<<"]["<<j<<"]";
             std::cin>>Matrice[i][j];
         }
     }
