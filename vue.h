@@ -34,7 +34,7 @@ public:
 
     vector<int> getFSSaisie();
     vector<int> getAPSSaisie();
-    vector<vector<int>> getCoutSaisie();
+    vector<vector<int>> getCoutSaisie(int usingFSAps);
     bool getBoxSaisie();
     bool getBoxOrienteSaisie();
 

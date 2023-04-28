@@ -15,7 +15,7 @@ void saisieFSAPS::onClick_valider()
     d_checkOriente = d_vue.getBoxOrienteSaisie();
     d_Check = d_vue.getBoxSaisie();
     if(d_Check)
-        d_cout = d_vue.getCoutSaisie();
+        d_cout = d_vue.getCoutSaisie(0);
 
     emit envoieSaisieFSAPS();
 

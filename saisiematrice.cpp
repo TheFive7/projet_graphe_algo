@@ -18,7 +18,7 @@ void saisieMatrice::onClick_valider()
     d_m = d_vue.getM();
 
     if(d_check)
-        d_cout = d_vue.getCoutSaisie();
+        d_cout = d_vue.getCoutSaisie(1);
 
     emit envoieSaisieMatrice();
 

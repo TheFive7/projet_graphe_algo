@@ -831,14 +831,27 @@ vector<int> vue::getFpOrd()
     return fp;
 }
 
-vector<vector<int>> vue::getCoutSaisie()
+vector<vector<int>> vue::getCoutSaisie(int usingFSAps)
 {
     QString s = this->d_coutSaisie->toPlainText();
     QStringList ligne = s.split(",");
-    int n = getAPSSaisie()[0];
-    int m = getFSSaisie()[0] - n;
-    vector<vector<int>> nCout(n+1);
+
     int cpt = 0;
+    int n,m;
+
+    if(usingFSAps == 0)
+    {
+        n = getAPSSaisie()[0];
+        m = getFSSaisie()[0] - n;
+    }
+    if(usingFSAps == 1)
+    {
+        QLineEdit* Qn = this->d_n;
+        QLineEdit* Qm = this->d_m;
+        n = Qn->text().toInt();
+        m = Qm->text().toInt();
+    }
+    vector<vector<int>> nCout(n+1);
     nCout[0].resize(2);
     nCout[0][0] = n;
     nCout[0][1] = m;
