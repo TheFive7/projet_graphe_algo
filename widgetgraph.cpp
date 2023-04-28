@@ -1,44 +1,29 @@
 #include "widgetgraph.h"
 #include "cmath"
 
-widgetGraph::widgetGraph(QWidget *parent)
-    : QGraphicsView(parent), sceneSizeW{400}, sceneSizeH{400}
-{
+widgetGraph::widgetGraph(QWidget *parent) : QGraphicsView(parent), sceneSizeW{400}, sceneSizeH{400} {
     setup();
 }
 
-widgetGraph::widgetGraph(unsigned sceneSize, QWidget *parent)
-    : QGraphicsView(parent), sceneSizeW{sceneSize}, sceneSizeH{sceneSize}
-{
+widgetGraph::widgetGraph(unsigned sceneSize, QWidget *parent) : QGraphicsView(parent), sceneSizeW{sceneSize}, sceneSizeH{sceneSize} {
     setup();
 }
 
-widgetGraph::widgetGraph(unsigned sceneSizeW, unsigned sceneSizeH, QWidget *parent)
-    : QGraphicsView(parent), sceneSizeW{sceneSizeW}, sceneSizeH{sceneSizeH}
-{
+widgetGraph::widgetGraph(unsigned sceneSizeW, unsigned sceneSizeH, QWidget *parent) : QGraphicsView(parent), sceneSizeW{sceneSizeW}, sceneSizeH{sceneSizeH} {
     setup();
 }
 
-void widgetGraph::setup()
-{
+void widgetGraph::setup() {
     setCacheMode(CacheBackground);
     setViewportUpdateMode(BoundingRectViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(AnchorUnderMouse);
-    //scale(qreal(0.8), qreal(0.8));
     scale(qreal(1), qreal(1));
 
     scene = new QGraphicsScene(this);
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-    //scene->setSceneRect(-(int)sceneSizeW / 2, -(int)sceneSizeH / 2, sceneSizeW, sceneSizeH);
     scene->setSceneRect(-(int)sceneSizeW, -(int)sceneSizeH / 2, sceneSizeW * 2, sceneSizeH);
     setScene(scene);
-
-    // Exemple
-    //const vector<int> fs {6, 2, 3, 0, 3, 0, 0};
-    //const vector<int> aps {3, 1, 4, 6};
-    //vector<int> APS{6, 1, 5, 7, 10, 13, 16};
-    //vector<int> FS{18, 2, 3, 5, 0, 1, 0, 2, 5, 0, 3, 5, 0, 2, 6, 0, 1, 2, 0};
 
     d_g = Graph();
     loadGraph(d_g);
@@ -47,14 +32,13 @@ void widgetGraph::setup()
     ajouterNoeud(Noeud(4), {0, 0, 1, 1, 0}, {0, 0, 1, 0, 0});
 }
 
-void widgetGraph::itemMoved()
-{
-    if (!timerId)
+void widgetGraph::itemMoved() {
+    if (!timerId) {
         timerId = startTimer(1000 / 25);
+    }
 }
 
-void widgetGraph::keyPressEvent(QKeyEvent *event)
-{
+void widgetGraph::keyPressEvent(QKeyEvent *event) {
     switch (event->key()) {
     case Qt::Key_Up:
         moveGraph(0, -20);
@@ -83,29 +67,24 @@ void widgetGraph::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void widgetGraph::moveGraph(qreal dx, qreal dy)
-{
-    for(auto node : nodes) node->moveBy(dx, dy);
+void widgetGraph::moveGraph(qreal dx, qreal dy) {
+    for (auto node : nodes) {
+        node->moveBy(dx, dy);
+    }
 }
 
-void widgetGraph::timerEvent(QTimerEvent *event)
-{
+void widgetGraph::timerEvent(QTimerEvent *event) {
     Q_UNUSED(event);
 
-    /*QList<widgetNode *> nodes;
-    const QList<QGraphicsItem *> items = scene()->items();
-    for (QGraphicsItem *item : items) {
-        if (widgetNode *node = qgraphicsitem_cast<widgetNode *>(item))
-            nodes << node;
-    }*/
-
-    for (widgetNode *node : qAsConst(nodes))
+    for (widgetNode *node : qAsConst(nodes)) {
         node->calculateForces();
+    }
 
     bool itemsMoved = false;
     for (widgetNode *node : qAsConst(nodes)) {
-        if (node->advancePosition())
+        if (node->advancePosition()) {
             itemsMoved = true;
+        }
     }
 
     if (!itemsMoved) {
@@ -114,23 +93,14 @@ void widgetGraph::timerEvent(QTimerEvent *event)
     }
 }
 
-void widgetGraph::wheelEvent(QWheelEvent *event)
-{
+void widgetGraph::wheelEvent(QWheelEvent *event) {
     scaleView(pow(2., event->angleDelta().y() / 240.0));
 }
 
-void widgetGraph::drawBackground(QPainter *painter, const QRectF &rect)
-{
+void widgetGraph::drawBackground(QPainter *painter, const QRectF &rect) {
     Q_UNUSED(rect);
 
-    // Ombres
     QRectF sceneRect = this->sceneRect();
-    /*QRectF rightShadow(sceneRect.right(), sceneRect.top() + 5, 5, sceneRect.height());
-    QRectF bottomShadow(sceneRect.left() + 5, sceneRect.bottom(), sceneRect.width(), 5);
-    if (rightShadow.intersects(rect) || rightShadow.contains(rect))
-        painter->fillRect(rightShadow, Qt::darkGray);
-    if (bottomShadow.intersects(rect) || bottomShadow.contains(rect))
-        painter->fillRect(bottomShadow, Qt::darkGray);*/
 
     // Remplissage
     QLinearGradient gradient(sceneRect.topLeft(), sceneRect.bottomRight());
@@ -141,8 +111,7 @@ void widgetGraph::drawBackground(QPainter *painter, const QRectF &rect)
     painter->drawRect(sceneRect);
 
     // Texte
-    QRectF textRect(sceneRect.left() + 4, sceneRect.top() + 4,
-                    sceneRect.width() - 4, sceneRect.height() - 4);
+    QRectF textRect(sceneRect.left() + 4, sceneRect.top() + 4, sceneRect.width() - 4, sceneRect.height() - 4);
     QString message("Présentation graphique du graphe");
 
     QFont font = painter->font();
@@ -155,113 +124,94 @@ void widgetGraph::drawBackground(QPainter *painter, const QRectF &rect)
     painter->drawText(textRect, message);
 }
 
-void widgetGraph::scaleView(qreal scaleFactor)
-{
+void widgetGraph::scaleView(qreal scaleFactor) {
     qreal factor = transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
-    if (factor < 0.07 || factor > 100)
+    if (factor < 0.07 || factor > 100) {
         return;
+    }
 
     scale(scaleFactor, scaleFactor);
 }
 
-void widgetGraph::zoomIn()
-{
+void widgetGraph::zoomIn() {
     scaleView(1.2);
 }
 
-void widgetGraph::zoomOut()
-{
+void widgetGraph::zoomOut() {
     scaleView(1 / 1.2);
 }
 
-vector<int> widgetGraph::getFs() const
-{
+vector<int> widgetGraph::getFs() const {
     return d_g.getFS();
 }
 
-vector<int> widgetGraph::getAps() const
-{
+vector<int> widgetGraph::getAps() const {
     return d_g.getAPS();
 }
 
-vector<vector<int>> widgetGraph::getCouts() const
-{
+vector<vector<int>> widgetGraph::getCouts() const {
     return d_g.getCouts();
 }
 
-vector<vector<int>> widgetGraph::getMatrice() const
-{
+vector<vector<int>> widgetGraph::getMatrice() const {
     return d_g.getMatAdj();
 }
 
-bool widgetGraph::getUsingFSandAPS() const
-{
+bool widgetGraph::getUsingFSandAPS() const {
     return d_g.isUsingFsAndAps();
 }
 
-bool widgetGraph::getOriente() const
-{
+bool widgetGraph::getOriente() const {
     return d_g.getEst_oriente();
 }
 
-Graph widgetGraph::getGraph() const
-{
+Graph widgetGraph::getGraph() const {
     return d_g;
 }
 
-bool widgetGraph::englobe_Dantzig()
-{
+bool widgetGraph::englobe_Dantzig() {
     vector<vector<int>> c = d_g.getCouts();
-    if(Dantzig(c))
-    {
+    if(Dantzig(c)) {
         d_g.setCout(c);
         return true;
-    }
-    else
-    {
+    } else {
         return false;
     }
 }
 
-void widgetGraph::englobe_Dijkstra(int sommet_depart, vector<int>& d, vector<int>& pr)
-{
+void widgetGraph::englobe_Dijkstra(int sommet_depart, vector<int>& d, vector<int>& pr) {
     cout<<"DIJK";
-    if(!d_g.isUsingFsAndAps())
-    {
+    if(!d_g.isUsingFsAndAps()) {
         transformeVersFS_APS();
     }
 
     Dijkstra(d_g.getFS(),d_g.getAPS(),d_g.getCouts(),sommet_depart,d,pr);
 }
 
-vector<vector<int>> widgetGraph::englobe_Distance()
-{
+vector<vector<int>> widgetGraph::englobe_Distance() {
     vector<vector<int>> matriceDistance;
-    if(!d_g.isUsingFsAndAps())
-    {
+    if(!d_g.isUsingFsAndAps()) {
         transformeVersFS_APS();
     }
     mat_distance(d_g.getFS(),d_g.getAPS(),matriceDistance);
     return matriceDistance;
 }
 
-void widgetGraph::englobe_Kruskal()
-{
+void widgetGraph::englobe_Kruskal() {
     Graph t;
-    if(!d_g.isUsingFsAndAps())
-    {
+    if(!d_g.isUsingFsAndAps()) {
         transformeVersFS_APS();
     }
     Kruskal(d_g,t);
 
-    for(int i = 1 ; i < t.getMatAdj().size() ; ++i)
+    for(int i = 1 ; i < t.getMatAdj().size() ; ++i) {
         printVector(t.getMatAdj()[i]);
+    }
 
     //loadGraph(t);
 }
 
-void widgetGraph::englobe_Ordonnancement(const vector<int>& duree_taches, const vector<int>& fp, const vector<int>& app, vector<int>& longueur_critique)
-{
+void widgetGraph::englobe_Ordonnancement(const vector<int>& duree_taches, const vector<int>& fp, const vector<int>& app, vector<int>& longueur_critique) {
     vector<int> new_fs, new_aps;
     vector<int> file_pred_critique;
     vector<int> adr_prem_pred_critique;
@@ -273,19 +223,16 @@ void widgetGraph::englobe_Ordonnancement(const vector<int>& duree_taches, const 
     loadGraph(Graph{new_fs,new_aps});
 }
 
-void widgetGraph::englobe_Prufer_decode(const vector<int>& p)
-{
+void widgetGraph::englobe_Prufer_decode(const vector<int>& p) {
     vector<vector<int>> mat;
     Prufer_decode(p, mat);
 
     loadGraph(Graph{mat,false});
 }
 
-vector<int> widgetGraph::englobe_Prufer_encode()
-{
+vector<int> widgetGraph::englobe_Prufer_encode() {
     vector<int> p;
-    if(d_g.isUsingFsAndAps())
-    {
+    if(d_g.isUsingFsAndAps()) {
         transformeVersMatrice();
     }
     vector<vector<int>> mat = d_g.getMatAdj();
@@ -293,21 +240,17 @@ vector<int> widgetGraph::englobe_Prufer_encode()
     return p;
 }
 
-vector<int> widgetGraph::englobe_Rang()
-{
+vector<int> widgetGraph::englobe_Rang() {
     vector<int> rg;
-    if(!d_g.isUsingFsAndAps())
-    {
+    if(!d_g.isUsingFsAndAps()) {
         transformeVersFS_APS();
     }
     rang(rg,d_g.getFS(),d_g.getAPS());
     return rg;
 }
 
-void widgetGraph::englobe_Tarjan(vector<int>& cfc, vector<int>& pilch, vector<int>& pred, vector<int>& prem, vector<int>& base, vector<int>& baseInitiale)
-{
-    if(!d_g.isUsingFsAndAps())
-    {
+void widgetGraph::englobe_Tarjan(vector<int>& cfc, vector<int>& pilch, vector<int>& pred, vector<int>& prem, vector<int>& base, vector<int>& baseInitiale) {
+    if(!d_g.isUsingFsAndAps()) {
         transformeVersFS_APS();
     }
     fortconnexe(d_g.getFS(),d_g.getAPS(),cfc,pilch,pred,prem);
@@ -319,14 +262,10 @@ void widgetGraph::englobe_Tarjan(vector<int>& cfc, vector<int>& pilch, vector<in
     //On va utiliser g pour shortcut
     Graph g = Graph{mat};
 
-    //Nouveau graphe (Reduit) //PROBLEME---------------------PEUT ETRE AJOUT FENETRE
-
-    //loadGraph(Graph{mat});
-
     //determination de la base du graphe reduit :
     vector<int> fs, aps;
 
-   // d_g.matAdj_to_FS_APS(fs,aps);
+    // d_g.matAdj_to_FS_APS(fs,aps);
     g.matAdj_to_FS_APS(fs,aps);
 
     base_Greduit(fs,aps,base);
@@ -335,78 +274,63 @@ void widgetGraph::englobe_Tarjan(vector<int>& cfc, vector<int>& pilch, vector<in
     edition_bases(prem,pilch,base,baseInitiale);
 }
 
-bool widgetGraph::verifieFS_APS_NonVide()
-{
-    if(d_g.getFS().empty() || d_g.getAPS().empty())
-    {
+bool widgetGraph::verifieFS_APS_NonVide() {
+    if(d_g.getFS().empty() || d_g.getAPS().empty()) {
         return false;
     }
     return true;
 }
 
-bool widgetGraph::verifieMatrice_NonVide()
-{
+bool widgetGraph::verifieMatrice_NonVide() {
     vector<vector<int>> mat = d_g.getMatAdj();
-    if(mat.empty())
+    if(mat.empty()) {
         return false;
-    else if(mat[0].size() != 2)
-    {
+    } else if(mat[0].size() != 2) {
         return false;
-    }
-    else
-    {
+    } else {
         unsigned size = mat[1].size();
-        for(unsigned i = 2 ; i < mat.size() ; ++i)
-        {
-            if(mat[i].size() != size)
+        for(unsigned i = 2 ; i < mat.size() ; ++i) {
+            if(mat[i].size() != size) {
                 return false;
+            }
         }
         return true;
     }
 }
 
-bool widgetGraph::verifieCout_NonVide()
-{
+bool widgetGraph::verifieCout_NonVide() {
 
-    if(d_g.getCouts().empty())
+    if(d_g.getCouts().empty()) {
         return false;
-    else
-    {
+    } else {
          vector<vector<int>> cout = d_g.getCouts();
-        if(cout[0].size() != 2)
-        {
+        if(cout[0].size() != 2) {
             return false;
-        }
-        else
-        {
+        } else {
             unsigned size = cout[1].size();
-            for(unsigned i = 2 ; i < cout.size() ; ++i)
-            {
-                if(cout[i].size() != size)
+            for(unsigned i = 2 ; i < cout.size() ; ++i) {
+                if(cout[i].size() != size) {
                     return false;
+                }
             }
             return true;
         }
     }
 }
 
-void widgetGraph::ajouterNoeud(const Noeud& noeud, const vector<int>& pred, const vector<int>& succ)
-{
+void widgetGraph::ajouterNoeud(const Noeud& noeud, const vector<int>& pred, const vector<int>& succ) {
     auto node = new widgetNode(this, noeud);
     nodes << node;
     scene->addItem(node);
     centerNode(node);
 
-    for(unsigned i = 0; i < nodes.size(); ++i)
-    {
-        if(pred[i+1])
-        {
+    for(unsigned i = 0; i < nodes.size(); ++i) {
+        if(pred[i+1]) {
             auto edge = new widgetEdge(nodes[i], node);
             nodes[i]->addEdge(edge);
             scene->addItem(edge);
         }
-        if(succ[i+1])
-        {
+        if(succ[i+1]) {
             auto edge = new widgetEdge(node, nodes[i]);
             nodes[i]->addEdge(edge);
             scene->addItem(edge);
@@ -415,39 +339,35 @@ void widgetGraph::ajouterNoeud(const Noeud& noeud, const vector<int>& pred, cons
     d_g.ajouterNoeud(noeud, pred, succ);
 }
 
-void widgetGraph::loadFrom(std::istream& ist)
-{
+void widgetGraph::loadFrom(std::istream& ist) {
     d_g.loadFrom(ist);
     loadGraph(d_g);
 }
 
-void widgetGraph::transformeVersMatrice()
-{
+void widgetGraph::transformeVersMatrice() {
     vector<vector<int>> matrice ;
     d_g.FS_APS_to_MatAdj(matrice);
 
-    for(unsigned i = 1 ; i < matrice.size() ; ++i)
+    for(unsigned i = 1 ; i < matrice.size() ; ++i) {
         printVector(matrice[i]);
+    }
 
     d_g = Graph(matrice, d_g.getSommets(), d_g.getEst_oriente(), d_g.getA_Des_Poids());
 }
 
-void widgetGraph::transformeVersFS_APS()
-{
+void widgetGraph::transformeVersFS_APS() {
     vector<int> fs, aps;
     d_g.matAdj_to_FS_APS(fs,aps);
 
     d_g = Graph(fs, aps, d_g.getSommets(), d_g.getEst_oriente(), d_g.getA_Des_Poids());
 }
 
-void widgetGraph::loadGraph(const Graph& g)
-{
+void widgetGraph::loadGraph(const Graph& g) {
     d_g = g;
     scene->clear();
     nodes.resize(0);
 
-    for(unsigned i = 1; i < d_g.getSommets().size(); ++i)
-    {
+    for(unsigned i = 1; i < d_g.getSommets().size(); ++i) {
         auto node = new widgetNode(this, *d_g.getSommets()[i]);
 
         nodes << node;
@@ -456,14 +376,11 @@ void widgetGraph::loadGraph(const Graph& g)
 
     centerGraph();
 
-    if(d_g.isUsingFsAndAps())
-    {
-        for(unsigned i = 1; i < d_g.getAPS().size(); ++i)
-        {
+    if(d_g.isUsingFsAndAps()) {
+        for(unsigned i = 1; i < d_g.getAPS().size(); ++i) {
             unsigned j = d_g.getFS()[d_g.getAPS()[i]];
             unsigned k = d_g.getAPS()[i];
-            while(j != 0)
-            {
+            while(j != 0) {
                 int iBis = i-1, jBis = j-1;
                 auto edge = new widgetEdge(nodes[iBis], nodes[jBis]);
                 nodes[iBis]->addEdge(edge);
@@ -472,15 +389,10 @@ void widgetGraph::loadGraph(const Graph& g)
                 j = d_g.getFS()[k];
             }
         }
-    }
-    else
-    {
-        for(unsigned i = 1; i < d_g.getMatAdj().size(); ++i)
-        {
-            for(unsigned j = 1; j < d_g.getMatAdj()[i].size(); ++j)
-            {
-                if(d_g.getMatAdj()[i][j] != 0)
-                {
+    } else {
+        for(unsigned i = 1; i < d_g.getMatAdj().size(); ++i) {
+            for(unsigned j = 1; j < d_g.getMatAdj()[i].size(); ++j) {
+                if(d_g.getMatAdj()[i][j] != 0) {
                     int iBis = i-1, jBis = j-1;
                     auto edge = new widgetEdge(nodes[iBis], nodes[jBis]);
                     nodes[iBis]->addEdge(edge);
@@ -491,15 +403,14 @@ void widgetGraph::loadGraph(const Graph& g)
     }
 }
 
-void widgetGraph::centerGraph()
-{
-    for(auto node : nodes) centerNode(node);
+void widgetGraph::centerGraph() {
+    for(auto node : nodes) {
+        centerNode(node);
+    }
 }
 
-void widgetGraph::centerNode(widgetNode* node)
-{
-    if(nodes[0] == node)
-    {
+void widgetGraph::centerNode(widgetNode* node) {
+    if(nodes[0] == node) {
         node->setPos(0, 0);
     } else {
         auto i = nodes.indexOf(node);
@@ -508,8 +419,7 @@ void widgetGraph::centerNode(widgetNode* node)
     }
 }
 
-void widgetGraph::saveIn(std::ostream& ost)
-{
+void widgetGraph::saveIn(std::ostream& ost) {
     d_g.saveIn(ost);
 }
 

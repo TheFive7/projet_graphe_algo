@@ -386,13 +386,12 @@ void Kruskal(const Graph& g, Graph &t)
         //t.setCout(matriceCout);
 }
 
-void mat_distance(const vector<int>& FS, const vector<int>& APS, vector<vector<int>>& matriceDistance)
-{
+void mat_distance(const vector<int>& FS, const vector<int>& APS, vector<vector<int>>& matriceDistance) {
     int n = APS[0];
-    matriceDistance.resize(n+1);
+    matriceDistance.resize(n + 1);
     matriceDistance[0].resize(2);
-    for(int r = 1 ; r <= n ; r++)
-    {
+
+    for (int r = 1 ; r <= n ; r++) {
         descente_largeur(r,FS,APS,matriceDistance[r]);
     }
     matriceDistance[0][0] = n;
@@ -457,9 +456,9 @@ void printVector(const vector<int>& v)
     cout << v[i] << "]\n";
 }
 
-void Prufer_decode(const vector<int>& p, vector<vector<int>>& mat)
-{
-    unsigned m = p[0], n = m + 2;
+void Prufer_decode(const vector<int>& p, vector<vector<int>>& mat) {
+    unsigned m = p[0];
+    unsigned n = m + 2;
     vector<int> s(m + 3);
 
     mat.clear();
@@ -467,13 +466,20 @@ void Prufer_decode(const vector<int>& p, vector<vector<int>>& mat)
     mat[0].resize(2);
     mat[0][0] = n;
     mat[0][1] = n + m;
-    for(unsigned i = 1; i <= n; ++i) mat[i].resize(n + 1, 0);
 
-    for(unsigned i = 1; i <= n; ++i) s[i] = 0;
-    for(unsigned i = 1; i <= m; ++i) ++s[p[i]];
+    for(unsigned i = 1; i <= n; ++i) {
+        mat[i].resize(n + 1, 0);
+    }
 
-    for(unsigned i = 1; i <= m; ++i)
-    {
+    for(unsigned i = 1; i <= n; ++i) {
+        s[i] = 0;
+    }
+
+    for(unsigned i = 1; i <= m; ++i) {
+        ++s[p[i]];
+    }
+
+    for(unsigned i = 1; i <= m; ++i) {
         unsigned k = 1;
         while(s[k] != 0) ++k;
 
@@ -485,13 +491,11 @@ void Prufer_decode(const vector<int>& p, vector<vector<int>>& mat)
     }
 
     int k = -1;
-    for(unsigned i = 1; i <= n; ++i)
-    {
-        if(s[i] == 0)
-        {
-            if(k == -1) k = i;
-            else
-            {
+    for(unsigned i = 1; i <= n; ++i) {
+        if(s[i] == 0) {
+            if(k == -1) {
+                k = i;
+            } else {
                 mat[i][k] = 1;
                 mat[k][i] = 1;
             }
@@ -499,27 +503,28 @@ void Prufer_decode(const vector<int>& p, vector<vector<int>>& mat)
     }
 }
 
-void Prufer_encode(vector<vector<int>> mat, vector<int>& p)
-{
+void Prufer_encode(vector<vector<int>> mat, vector<int>& p) {
     unsigned n = mat[0][0];
     p.clear();
-    p.resize(n-1);
-    p[0] = n-2;
+    p.resize(n - 1);
+    p[0] = n - 2;
 
-    for(unsigned i = 1; i <= n; ++i)
-    {
+    for(unsigned i = 1; i <= n; ++i) {
         mat[i][0] = 0;
-        for(unsigned j = 1; j <= n; ++j)
-        {
+        for(unsigned j = 1; j <= n; ++j) {
             mat[i][0] += mat[i][j];
         }
     }
 
-    for(unsigned k = 1; k <= n-2; ++k)
-    {
+    for(unsigned k = 1; k <= n-2; ++k) {
         int i = 1, j = 1;
-        while(mat[i][0] != 1) ++i;
-        while(mat[i][j] != 1) ++j;
+        while (mat[i][0] != 1) {
+            ++i;
+        }
+
+        while (mat[i][j] != 1) {
+            ++j;
+        }
 
         p[k] = j;
         mat[i][j] = 0;

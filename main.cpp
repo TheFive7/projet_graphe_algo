@@ -11,7 +11,6 @@ int main(int argc, char *argv[])
     MainWindow w{};
     w.show();
 
-
     int exe = a.exec();
 
     test(); // Pour lancer les tests

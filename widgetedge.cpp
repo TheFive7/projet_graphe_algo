@@ -1,28 +1,24 @@
 #include "widgetedge.h"
 
-widgetEdge::widgetEdge(widgetNode* sourceNode, widgetNode* destNode)
-    : source(sourceNode), dest(destNode)
-{
+widgetEdge::widgetEdge(widgetNode* sourceNode, widgetNode* destNode) : source(sourceNode), dest(destNode) {
     setAcceptedMouseButtons(Qt::NoButton);
     source->addEdge(this);
     dest->addEdge(this);
     adjust();
 }
 
-widgetNode* widgetEdge::sourceNode() const
-{
+widgetNode* widgetEdge::sourceNode() const {
     return source;
 }
 
-widgetNode* widgetEdge::destNode() const
-{
+widgetNode* widgetEdge::destNode() const {
     return dest;
 }
 
-void widgetEdge::adjust()
-{
-    if (!source || !dest)
+void widgetEdge::adjust() {
+    if (!source || !dest) {
         return;
+    }
 
     QLineF line(mapFromItem(source, 0, 0), mapFromItem(dest, 0, 0));
     qreal length = line.length();
@@ -38,28 +34,28 @@ void widgetEdge::adjust()
     }
 }
 
-QRectF widgetEdge::boundingRect() const
-{
-    if (!source || !dest)
+QRectF widgetEdge::boundingRect() const {
+    if (!source || !dest) {
         return QRectF();
+    }
 
     qreal penWidth = 1;
     qreal extra = (penWidth + arrowSize) / 2.0;
 
-    return QRectF(sourcePoint, QSizeF(destPoint.x() - sourcePoint.x(),
-                                      destPoint.y() - sourcePoint.y()))
+    return QRectF(sourcePoint, QSizeF(destPoint.x() - sourcePoint.x(), destPoint.y() - sourcePoint.y()))
         .normalized()
         .adjusted(-extra, -extra, extra, extra);
 }
 
-void widgetEdge::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
-{
-    if (!source || !dest)
+void widgetEdge::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
+    if (!source || !dest) {
         return;
+    }
 
     QLineF line(sourcePoint, destPoint);
-    if(qFuzzyCompare(line.length(), qreal(0.)))
+    if (qFuzzyCompare(line.length(), qreal(0.))) {
         return;
+    }
 
     // Draw the line itself
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -74,16 +70,6 @@ void widgetEdge::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidg
     painter->setBrush(Qt::black);
 
     painter->drawPolygon(QPolygonF() << line.p2() << destArrowP1 << destArrowP2);
-
-    /*
-
-    QPointF sourceArrowP1 = sourcePoint + QPointF(sin(angle + M_PI / 3) * arrowSize,
-                                                 cos(angle + M_PI / 3) * arrowSize);
-    QPointF sourceArrowP2 = sourcePoint + QPointF(sin(angle + M_PI - M_PI / 3) * arrowSize,
-                                                 cos(angle + M_PI - M_PI / 3) * arrowSize);
-    painter->drawPolygon(QPolygonF() << line.p1() << sourceArrowP1 << sourceArrowP2);
-*/
-
 }
 
 
