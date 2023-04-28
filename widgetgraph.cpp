@@ -1,7 +1,7 @@
 #include "widgetgraph.h"
 #include "cmath"
 
-widgetGraph::widgetGraph(QWidget *parent) : QGraphicsView(parent), sceneSizeW{400}, sceneSizeH{400} {
+widgetGraph::widgetGraph(QWidget *parent) : QGraphicsView(parent), sceneSizeW{900}, sceneSizeH{900} {
     setup();
 }
 
