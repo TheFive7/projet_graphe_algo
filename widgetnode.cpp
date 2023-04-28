@@ -154,8 +154,17 @@ QVariant widgetNode::itemChange(GraphicsItemChange change, const QVariant &value
 
 void widgetNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    update();
-    QGraphicsItem::mousePressEvent(event);
+    if(event->button() == Qt::LeftButton)
+    {
+        update();
+        QGraphicsItem::mousePressEvent(event);
+    }
+    if(event->button() == Qt::RightButton)
+    {
+        graph->supprimerNoeud(this->getNoeud()->getId());
+        QGraphicsItem::mousePressEvent(event);
+    }
+
 }
 
 void widgetNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)

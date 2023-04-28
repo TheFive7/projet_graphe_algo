@@ -194,6 +194,12 @@ public:
      */
     void ajouterNoeud(const Noeud& n, const vector<int>& pred, const vector<int>& succ);
     /**
+     * @brief supprimer Noeud
+     *
+     * @param n
+     */
+    void supprimerNoeud(int id);
+    /**
      * @brief FS_APS_to_MatAdj
      *
      * @param matAdj

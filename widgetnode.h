@@ -8,6 +8,8 @@
 #include <QPainter>
 #include <QStyle>
 #include <QStyleOptionGraphicsItem>
+#include <QGraphicsSceneMouseEvent>
+#include <QDebug>
 
 class widgetEdge;
 class widgetGraph;

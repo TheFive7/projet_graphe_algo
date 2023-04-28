@@ -362,6 +362,58 @@ void Graph::ajouterNoeud(const Noeud& noeud, const vector<int>& pred, const vect
     sommets.push_back(make_unique<Noeud>(noeud));
 }
 
+void Graph::supprimerNoeud(int id)
+{
+    int cpt = 1;
+    for(int i = 1; i < FS.size(); i++)
+    {
+        if(cpt == id)
+        {
+            while(FS[i] != 0)
+            {
+                FS.erase(FS.begin()+i);
+            }
+            FS.erase(FS.begin()+i);
+            cpt++;
+        }
+        if(FS[i] == 0)
+            cpt++;
+    }
+
+    for(int i = 1; i < FS.size(); ++i)
+    {
+        if(FS[i] == id)
+        {
+            FS.erase(FS.begin()+i);
+        }
+        if(FS[i] > id)
+        {
+            FS[i]--;
+        }
+    }
+    APS.resize(1);
+    APS.push_back(1);
+    for(int i = 1; i < FS.size()-1; ++i)
+    {
+        if(FS[i] == 0)
+        {
+            APS.push_back(i+1);
+        }
+    }
+    APS[0] = APS.size()-1;
+    FS[0] = FS.size()-1;
+
+    sommets.erase(sommets.begin()+id);
+
+    for(int i = 1; i < sommets.size(); ++i)
+    {
+        if(sommets[i]->getId() > id)
+        {
+            sommets[i]->setId(sommets[i]->getId()-1);
+        }
+    }
+}
+
 void Graph::FS_APS_to_MatAdj(vector<vector<int>> &matAdj) const
 {
     unsigned size = APS[0];

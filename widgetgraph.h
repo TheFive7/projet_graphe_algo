@@ -40,6 +40,7 @@ public:
     bool                verifieCout_NonVide     ();
 
     void ajouterNoeud   (const Noeud& noeud, const vector<int>& pred, const vector<int>& succ);
+    void supprimerNoeud(int id);
     void centerGraph    ();
     void itemMoved      ();
     void loadFrom       (std::istream& ist);

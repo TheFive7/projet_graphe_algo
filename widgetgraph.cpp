@@ -415,6 +415,12 @@ void widgetGraph::ajouterNoeud(const Noeud& noeud, const vector<int>& pred, cons
     d_g.ajouterNoeud(noeud, pred, succ);
 }
 
+void widgetGraph::supprimerNoeud(int id)
+{
+    d_g.supprimerNoeud(id);
+    this->loadGraph(d_g);
+}
+
 void widgetGraph::loadFrom(std::istream& ist)
 {
     d_g.loadFrom(ist);
